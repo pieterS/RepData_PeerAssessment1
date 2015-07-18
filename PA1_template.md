@@ -5,7 +5,7 @@
 
 To prepare the data for analysis the first step is to unzip the data and read
 the results into a dataframe. Then the date column is transformed to a 
-POSIX date.
+POSIX date. Finally the scientific notation is changed for this report.
 
 
 ```r
@@ -13,6 +13,8 @@ activity <- read.csv(unz("activity.zip","activity.csv")
                      ,stringsAsFactors = FALSE)
 
 activity$date <- as.Date(activity$date, "%Y-%m-%d")
+
+options(scipen = 1, digits = 2)
 ```
 
 ## What is mean total number of steps taken per day?
@@ -58,19 +60,18 @@ median_steps <- median(activity.daily$total_steps)
 ```
 
 The histogram shows that on the majority of days between 10000 and 15000 steps 
-are taken.
-There are also more days where fewer steps are taken, than days where more than
+are taken. There are also more days where fewer steps are taken, than days where more than
 15000 steps are taken.
 
-The mean steps taken per day is 9354.2295082. The median steps taken per day 
+The mean steps taken per day is 9354.23. The median steps taken per day 
 is 10395.
 
 
 ## What is the average daily activity pattern?
 
 T show the average activity in a day over time all the original values are 
-grouped by interval and then the mean number of steps per interval is 
-calculated. Again, missing values are removed. The activity per interval is then
+grouped by interval and then the mean number of steps per interval is calculated.
+Again, missing values are removed. The activity per interval is then
 plotted.
 
 
@@ -121,8 +122,12 @@ na_steps <- sum(is.na(activity$steps))
 The number of missing values in the dataset is 2304.
 The number of missing steps values in the dataset is 2304. 
 This means there are only steps values missing. 
+
+In order to create a complete dataset, we can impute the missing values.
+The approach for this is as follows:
 We can impute these values by assigning the average steps taken for the
-corresponding interval to the missing steps taken value.
+corresponding interval to the missing  value. The  average steps 
+taken in each interal is calculated above.
 
 
 ```r
@@ -160,9 +165,12 @@ mean_steps_imp <- mean(activity.imputed.daily$total_steps)
 median_steps_imp <- median(activity.imputed.daily$total_steps)
 ```
 
-The mean steps taken per day on the imputed dataset is 1.0766189\times 10^{4} , which is larger than 9354.2295082, the mean value for the unimputed data. 
-The median number of steps is 1.0766189\times 10^{4}, this corresponds to 
-10395.
+The mean steps taken per day on the imputed dataset is 
+10766.19 , which is larger than 9354.23, the mean value for the unimputed data. 
+The median number of steps is 10766.19, this is also an increase 
+from 10395. Also note that the median value is not not a complete 
+number of steps anymore, as it is based on the per interval mean number of
+steps.
 
 The effect of imputing the data by setting any missing values to the average
 steps taken in that interval increases the estimates of the mean steps taken 
